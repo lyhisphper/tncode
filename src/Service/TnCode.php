@@ -1,5 +1,6 @@
 <?php
 namespace Service;
+
 /*! tncode 1.2 author:weiyingbin email:277612909@qq.com
 //@ object webiste: http://www.39gs.com/archive/259.html
 //@ https://github.com/binwind8/tncode
@@ -26,9 +27,9 @@ class TnCode
         //ini_set('display_errors','On');
         //
         error_reporting(0);
-        if (!isset($_SESSION)) {
-            session_start();
-        }
+//        if (!isset($_SESSION)) {
+//            session_start();
+//        }
     }
 
     function make()
@@ -39,26 +40,13 @@ class TnCode
         $this->_merge();
         $this->_imgout();
         $this->_destroy();
+        return $this->_x;
     }
 
-    function check($offset = '')
+    function check($offset, $tncode_r)
     {
-        if (!$_SESSION['tncode_r']) {
-            return false;
-        }
-        if (!$offset) {
-            $offset = $_REQUEST['tn_r'];
-        }
-        $ret = abs($_SESSION['tncode_r'] - $offset) <= $this->_fault;
-        if ($ret) {
-            unset($_SESSION['tncode_r']);
-        } else {
-            $_SESSION['tncode_err']++;
-            if ($_SESSION['tncode_err'] > 10) {//错误10次必须刷新
-                unset($_SESSION['tncode_r']);
-            }
-        }
-        return $ret;
+        return abs($tncode_r - $offset) <= $this->_fault;
+
     }
 
     private function _init()
@@ -68,10 +56,11 @@ class TnCode
         $this->im_fullbg = imagecreatefrompng($file_bg);
         $this->im_bg     = imagecreatetruecolor($this->bg_width, $this->bg_height);
         imagecopy($this->im_bg, $this->im_fullbg, 0, 0, 0, 0, $this->bg_width, $this->bg_height);
-        $this->im_slide         = imagecreatetruecolor($this->mark_width, $this->bg_height);
-        $_SESSION['tncode_r']   = $this->_x = mt_rand(50, $this->bg_width - $this->mark_width - 1);
-        $_SESSION['tncode_err'] = 0;
-        $this->_y               = mt_rand(0, $this->bg_height - $this->mark_height - 1);
+        $this->im_slide = imagecreatetruecolor($this->mark_width, $this->bg_height);
+        $this->_x       = mt_rand(50, $this->bg_width - $this->mark_width - 1);
+//        $_SESSION['tncode_r']   = $this->_x = mt_rand(50, $this->bg_width - $this->mark_width - 1);
+//        $_SESSION['tncode_err'] = 0;
+        $this->_y = mt_rand(0, $this->bg_height - $this->mark_height - 1);
     }
 
     private function _destroy()
