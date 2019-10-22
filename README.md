@@ -3,6 +3,7 @@
 - 进一步封装取出session，使用redis保存，适应前后端分离
 - 具体使用方式请参考<a href="https://github.com/binwind8/tncode">binwind8/tncode</a>
 - 警告：千万不要直接通过html访问，会出现各种莫名奇妙的情况，请通过web服务器访问html文件（个人血泪）
+- 静态文件单独存放在/static/ 目录内
 
 **项目转载自<a href="https://github.com/binwind8/tncode">binwind8/tncode</a>,本人作进一步封装，如有侵权，请联系894806814@qq.com,将删除**
 
