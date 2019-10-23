@@ -101,7 +101,7 @@ class TncodeService
         $key = Redis::hget('tncode:rand', $rand);
         if (empty($key)) return false;
         if (time() > $key) return false;
-        Redis::hset($key, $rand);
+        Redis::hdel($key, $rand);
         return true;
     }
 
