@@ -48,6 +48,8 @@ composer require lyh/tncode:^dev-master
 ```
 <?php
 
+<?php
+
 
 namespace App\Service;
 
@@ -73,15 +75,34 @@ class TncodeService
      * @param bool $isclear 是否清除
      * @return bool
      */
-    public function check($offset, $type = 0, $isclear = false)
+    public function check($offset, $type = 0)
     {
         $key      = self::getTypeAttribute($type);
         $tn       = new TnCode();
         $tncode_r = Redis::get($key);
         if (empty($tncode_r)) return false;
-        if ($isclear === true) Redis::del($key);
+        Redis::del($key); // 只能检查一次
         $r = $tn->check($offset, $tncode_r);
-        return $r;
+        if (empty($r)) return false;
+
+        $rand = md5(rand(10000000, 99999999));
+        Redis::hset('tncode:rand', $rand, time() + 600); // 有效期
+
+        return $rand;
+    }
+
+    /**
+     * 检查随机值是否有效
+     * @param $rand
+     * @return bool
+     */
+    public static function checkRand($rand)
+    {
+        $key = Redis::hget('tncode:rand', $rand);
+        if (empty($key)) return false;
+        if (time() > $key) return false;
+        Redis::hset($key, $rand);
+        return true;
     }
 
     public static function getTypeAttribute($type = 0)
