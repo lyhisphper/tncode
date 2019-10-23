@@ -41,7 +41,7 @@ _send_result_success: function (responseText, responseXML) {
 
 # 下载
 ```
-composer require lyh/tncode:^dev-master
+composer require lyh/tncode:dev-master
 ```
 
 # 使用(仅laravel)
