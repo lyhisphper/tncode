@@ -71,6 +71,9 @@ class TnCode
         imagedestroy($this->im_slide);
     }
 
+    /**
+     * 输出img
+     */
     private function _imgout()
     {
         if (!$_GET['nowebp'] && function_exists('imagewebp')) {//优先webp格式，超高压缩率
@@ -83,6 +86,26 @@ class TnCode
         header('Content-Type: image/' . $type);
         $func = "image" . $type;
         $func($this->im, null, $quality);
+    }
+
+    /**
+     * 返回img
+     * 不进行输出需要将所有header 注释
+     * @return string
+     */
+    private function _imgreturn($imgwebp = null)
+    {
+        if ($imgwebp == 'webp') {//优先webp格式，超高压缩率
+            $type    = 'webp';
+            $quality = 40;//图片质量 0-100
+        } else {
+            $type    = 'png';
+            $quality = 7;//图片质量 0-9
+        }
+        $func = "image" . $type;
+        $file = __DIR__ . 'tmp.png';
+        $func($this->im, $file, $quality);
+        return $file;
     }
 
     private function _merge()
